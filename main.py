@@ -42,7 +42,6 @@ class CoolWatcher():
         print('> Successfully login!')
 
     def play(self, URL):
-        time.sleep(random.random() * 30)
         self.driver.get(URL)
         time.sleep(1)
 
@@ -74,7 +73,11 @@ class CoolWatcher():
         urls = list(map(lambda e : e.get_attribute('href'), self.driver.find_elements_by_class_name('item_link')))
         return urls
 
-def PlayOne(url):
+def PlayOne(arg):
+    url, waiting = arg
+    print(f'* Start - {url.split("/")[-1]} ; waiting {waiting:.4f}s')
+
+    time.sleep(waiting)
     watcher = CoolWatcher()
     watcher.login()
     watcher.play(url)
@@ -88,8 +91,13 @@ def main():
     urls = head.GetAllURLs(args.courseId)
     del head
 
+    # Add some random waiting to prevent webpage load fail
+    num = len(urls)
+    front = min(3 * args.numWorkers, num)
+    waitingTimes = [random.random() * 10 * args.numWorkers for _ in range(front)] + [0] * (num - front)
+
     with Pool(args.numWorkers) as p:
-        p.map(PlayOne, urls)
+        p.map(PlayOne, zip(urls, waitingTimes), chunksize = 1)
 
 def parseArguments():
     parser = ArgumentParser()
@@ -99,3 +107,4 @@ def parseArguments():
 
 if __name__ == '__main__':
     main()
+

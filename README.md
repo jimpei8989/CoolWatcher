@@ -24,4 +24,8 @@ password = 'abcdefghijk' # this is not my password
 ```
 
 ### Be careful!
-- Only tested on my macOS.
+- **Roughly** and only tested on my macOS.
+
+### Some notes
+You might notice that there are several sleeps in this script, the main reason is to avoid simultaneous connections, or things might mess up. You may tune the sleeping time for better performance :)
+
