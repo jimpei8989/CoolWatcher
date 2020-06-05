@@ -57,10 +57,12 @@ class CoolWatcher():
                 time.sleep(30)
                 try:
                     replayButton = self.driver.find_element_by_class_name('vjs-ended')
+
+                    self.driver.get(URL)
                     print(f'+ End playing {URL}')
                     return
                 except:
-                    print(f'Keep playing {URL}')
+                    print(f'% Keep playing {URL}')
         except:
             print(f'- Fail to play {URL}')
             return
@@ -94,7 +96,7 @@ def main():
     # Add some random waiting to prevent webpage load fail
     num = len(urls)
     front = min(3 * args.numWorkers, num)
-    waitingTimes = [random.random() * 10 * args.numWorkers for _ in range(front)] + [0] * (num - front)
+    waitingTimes = [random.random() * 5 * args.numWorkers for _ in range(front)] + [0] * (num - front)
 
     with Pool(args.numWorkers) as p:
         p.map(PlayOne, zip(urls, waitingTimes), chunksize = 1)
